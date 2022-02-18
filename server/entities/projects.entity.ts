@@ -11,6 +11,9 @@ export class Projects {
   contextId: string;
 
   @Column()
+  admin: string;
+
+  @Column()
   title: string;
 
   @Column()
@@ -20,5 +23,5 @@ export class Projects {
   tasks: Tasks;
 
   @OneToMany(() => User, (user) => user.projects)
-  user: User;
+  users: User;
 }

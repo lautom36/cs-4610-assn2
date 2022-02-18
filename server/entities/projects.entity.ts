@@ -11,7 +11,7 @@ export class Projects {
   contextId: string;
 
   @Column()
-  admin: string;
+  adminId: number;
 
   @Column()
   title: string;

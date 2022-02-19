@@ -3,18 +3,24 @@ import { notEqual } from 'assert';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Projects } from 'server/entities/projects.entity';
+import { Tasks } from 'server/entities/tasks.entity';
+import { User } from 'server/entities/user.entity';
 import { ProjectsService } from 'server/providers/services/projects.service';
+import { UsersService } from 'server/providers/services/users.service';
 
 class ProjectPostBody {
-  adminId: number;
   contextId: string;
   description: string;
   title: string;
 }
 
+class ProjectPatchBody {
+  email: string;
+}
+
 @Controller()
 export class ProjectsController {
-  constructor(private projectsService: ProjectsService) {}
+  constructor(private projectsService: ProjectsService, private userService: UsersService) {}
 
   @Get('/projects')
   public async index(@JwtBody() jwtBody: JwtBodyDto) {
@@ -22,7 +28,7 @@ export class ProjectsController {
     return projects;
   }
 
-  @Get('/projects:id')
+  @Get('/projects/:id')
   public async show(@Param('id') id: string) {
     const project = await this.projectsService.findProjectById(parseInt(id, 10));
     return project;
@@ -31,7 +37,7 @@ export class ProjectsController {
   @Post('/projects')
   public async create(@JwtBody() jwtBody: JwtBodyDto, @Body() body: ProjectPostBody) {
     let project = new Projects();
-    project.adminId = body.adminId;
+    project.adminId = jwtBody.userId;
     project.contextId = 'randSting';
     project.description = body.description;
     project.title = body.title;
@@ -39,8 +45,13 @@ export class ProjectsController {
     return { project };
   }
 
-  @Patch('/projects:id')
-  public async update(@Param('id') id: string) {
+  @Patch('/projects/:id')
+  public async update(@Param('id') id: string, @Body() body: ProjectPatchBody) {
+    let project = await this.projectsService.findProjectById(parseInt(id, 10));
+    const user = await this.userService.findByEmail(body.email);
+    project.user = user;
+    project = await this.projectsService.addUser(project);
+    return { project };
   }
 
   @Delete('/projects/:id')

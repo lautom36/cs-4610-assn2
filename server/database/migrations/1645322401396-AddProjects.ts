@@ -34,16 +34,6 @@ export class AddProjects1645322401396 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'project',
-      new TableForeignKey({
-        columnNames: ['userId'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'user',
-        onDelete: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

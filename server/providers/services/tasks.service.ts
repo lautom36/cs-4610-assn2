@@ -37,6 +37,6 @@ export class TasksService {
   }
 
   removeTask(task: Tasks) {
-    this.projectRepository.delete(task);
+    this.projectRepository.delete(task.id);
   }
 }

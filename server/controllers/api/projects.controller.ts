@@ -24,14 +24,15 @@ export class ProjectsController {
 
   @Get('/projects')
   public async index(@JwtBody() jwtBody: JwtBodyDto) {
-    const projects = await this.projectsService.findAllForUser(jwtBody.userId);
-    return projects;
+    const user = await this.userService.find(jwtBody.userId);
+    const projects = await this.projectsService.findAllForUser(user);
+    return { projects };
   }
 
   @Get('/projects/:id')
   public async show(@Param('id') id: string) {
     const project = await this.projectsService.findProjectById(parseInt(id, 10));
-    return project;
+    return { project };
   }
 
   @Post('/projects')
@@ -49,7 +50,7 @@ export class ProjectsController {
   public async update(@Param('id') id: string, @Body() body: ProjectPatchBody) {
     let project = await this.projectsService.findProjectById(parseInt(id, 10));
     const user = await this.userService.findByEmail(body.email);
-    project.user = user;
+    project.user.concat(user);
     project = await this.projectsService.addUser(project);
     return { project };
   }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from 'server/entities/projects.entity';
+import { User } from 'server/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -8,11 +9,14 @@ export class ProjectsService {
   constructor(
     @InjectRepository(Projects)
     private projectRepository: Repository<Projects>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  findAllForUser(userId: number): Promise<Projects[]> {
+  findAllForUser(user: User): Promise<Projects[]> {
     return this.projectRepository.find({
-      where: { userId },
+      relations: ['user'],
+      where: { id: user.id },
     });
   }
 

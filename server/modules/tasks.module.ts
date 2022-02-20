@@ -7,7 +7,7 @@ import { User } from 'server/entities/user.entity';
 import { TasksService } from 'server/providers/services/tasks.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tasks, Projects, User])],
+  imports: [TypeOrmModule.forFeature([Tasks]), Projects, User],
   controllers: [TasksController],
   providers: [TasksService],
   exports: [],

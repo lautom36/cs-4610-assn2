@@ -39,16 +39,6 @@ export class AddTasks1645322429794 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'project',
-      new TableForeignKey({
-        columnNames: ['projectId'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'project',
-        onDelete: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

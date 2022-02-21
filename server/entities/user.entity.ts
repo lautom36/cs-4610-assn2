@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { Projects } from './projects.entity';
 import { RefreshToken } from './refresh_token.entity';
 import { Tasks } from './tasks.entity';
@@ -28,8 +28,9 @@ export class User {
   userRoles: UserRole[];
 
   @ManyToMany(() => Projects, (projects) => projects.user)
+  @JoinTable()
   projects: Projects[];
 
-  @ManyToMany(() => Tasks, (tasks) => tasks.user)
+  @OneToMany(() => Tasks, (tasks) => tasks.user)
   tasks: Tasks[];
 }

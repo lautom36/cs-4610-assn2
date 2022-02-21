@@ -35,7 +35,7 @@ export class TasksController {
 
   @Get('/tasks')
   public async index(@Body() body: TaskByProjectBody) {
-    const tasks = await this.taskService.findAllforProject(body.project);
+    const tasks = await this.taskService.findAllforProject(body.project.id);
     return tasks;
   }
 
@@ -50,7 +50,7 @@ export class TasksController {
     const project = await this.projectsService.findProjectById(body.projectId);
     let task = new Tasks();
     task.description = body.description;
-    task.project = project;
+    task.project.concat(project);
     task.projectId = body.projectId;
     task.status = false;
     task.title = body.title;

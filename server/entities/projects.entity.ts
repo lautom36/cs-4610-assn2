@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Tasks } from './tasks.entity';
 import { User } from './user.entity';
 
@@ -23,6 +23,5 @@ export class Projects {
   tasks: Tasks;
 
   @ManyToMany(() => User, (user) => user.projects)
-  @JoinTable()
   user: User[];
 }

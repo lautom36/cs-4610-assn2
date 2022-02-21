@@ -13,11 +13,11 @@ export class TasksService {
     private projectRepository: Repository<Projects>,
   ) {}
 
-  findAllforProject(project: Projects): Promise<Tasks[]> {
-    const projectId = project.id;
-    return this.taskRepository.find({
-      where: { projectId },
+  async findAllforProject(id: number) {
+    const projectObj = await this.projectRepository.findOne(id, {
+      relations: ['tasks'],
     });
+    return projectObj.tasks;
   }
 
   findTaskById(id: number): Promise<Tasks> {

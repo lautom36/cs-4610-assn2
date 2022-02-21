@@ -17,6 +17,11 @@ export class AddRefreshToken1637631042877 implements MigrationInterface {
             type: 'int',
             isNullable: false,
           },
+          {
+            name: 'adminId',
+            type: 'int',
+            isNullable: false,
+          },
         ],
       }),
     );
@@ -30,6 +35,15 @@ export class AddRefreshToken1637631042877 implements MigrationInterface {
         onDelete: 'CASCADE',
       }),
     );
+    // await queryRunner.createForeignKey(
+    //   'refresh_token',
+    //   new TableForeignKey({
+    //     columnNames: ['adminId'],
+    //     referencedColumnNames: ['id'],
+    //     referencedTableName: 'user',
+    //     onDelete: 'CASCADE',
+    //   }),
+    // );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

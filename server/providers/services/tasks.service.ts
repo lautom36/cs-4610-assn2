@@ -14,6 +14,7 @@ export class TasksService {
   ) {}
 
   async findAllforProject(id: number) {
+    console.log('tasks.service: findAllForProject started');
     const projectObj = await this.projectRepository.findOne(id, {
       relations: ['tasks'],
     });

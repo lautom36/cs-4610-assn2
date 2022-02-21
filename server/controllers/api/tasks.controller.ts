@@ -50,7 +50,7 @@ export class TasksController {
     const project = await this.projectsService.findProjectById(body.projectId);
     let task = new Tasks();
     task.description = body.description;
-    task.project.concat(project);
+    task.project = project;
     task.projectId = body.projectId;
     task.status = false;
     task.title = body.title;

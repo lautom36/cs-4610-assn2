@@ -5,6 +5,7 @@ import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Projects } from 'server/entities/projects.entity';
 import { Tasks } from 'server/entities/tasks.entity';
 import { User } from 'server/entities/user.entity';
+import { UserProjects } from 'server/entities/user_projects.entity';
 import { ProjectsService } from 'server/providers/services/projects.service';
 import { UsersService } from 'server/providers/services/users.service';
 
@@ -50,7 +51,9 @@ export class ProjectsController {
   public async update(@Param('id') id: string, @Body() body: ProjectPatchBody) {
     let project = await this.projectsService.findProjectById(parseInt(id, 10));
     const user = await this.userService.findByEmail(body.email);
-    project.user.concat(user);
+    const userProject = new UserProjects();
+    userProject.user = user;
+    project.userProjects = [userProject];
     project = await this.projectsService.addUser(project);
     return { project };
   }

@@ -11,9 +11,10 @@ import { RefreshTokensController } from 'server/controllers/refresh_tokens.contr
 import { Role } from 'server/entities/role.entity';
 import { RolesService } from 'server/providers/services/roles.service';
 import { UserRole } from 'server/entities/user_role.entity';
+import { UserProjects } from 'server/entities/user_projects.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, RefreshToken, Role, UserRole])],
+  imports: [TypeOrmModule.forFeature([User, RefreshToken, Role, UserRole, UserProjects])],
   controllers: [SessionsController, UsersController, RefreshTokensController],
   providers: [UsersService, RolesService, RefreshTokensService, JwtService],
   exports: [TypeOrmModule],

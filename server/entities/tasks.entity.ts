@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Projects } from './projects.entity';
 import { User } from './user.entity';
 
@@ -9,6 +9,9 @@ export class Tasks {
 
   @Column()
   projectId: number;
+
+  @Column()
+  userId: number;
 
   @Column()
   title: string;
@@ -22,11 +25,11 @@ export class Tasks {
   @Column()
   status: boolean;
 
-  @OneToMany(() => Projects, (projects) => projects.tasks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Projects, (projects) => projects.tasks, { onDelete: 'CASCADE' })
   @JoinColumn()
-  project: Projects[];
+  project: Projects;
 
-  @OneToMany(() => User, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'SET NULL' })
   @JoinColumn()
   user: User;
 }

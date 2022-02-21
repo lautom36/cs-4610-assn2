@@ -1,19 +1,24 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
-export class AddTasks1645322429794 implements MigrationInterface {
+export class addTasks1645419021979 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'task',
+        name: 'tasks',
         columns: [
           {
             name: 'id',
+            type: 'int',
             isPrimary: true,
             isGenerated: true,
-            type: 'int',
           },
           {
             name: 'projectId',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'userId',
             type: 'int',
             isNullable: false,
           },
@@ -35,13 +40,34 @@ export class AddTasks1645322429794 implements MigrationInterface {
           {
             name: 'status',
             type: 'boolean',
+            isNullable: false,
           },
         ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'tasks',
+      new TableForeignKey({
+        columnNames: ['userId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'user',
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'tasks',
+      new TableForeignKey({
+        columnNames: ['projectId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'projects',
+        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('task');
+    await queryRunner.dropTable('tasks');
   }
 }

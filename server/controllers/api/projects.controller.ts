@@ -25,8 +25,8 @@ export class ProjectsController {
 
   @Get('/projects')
   public async index(@JwtBody() jwtBody: JwtBodyDto) {
-    const user = await this.userService.find(jwtBody.userId);
-    const projects = await this.projectsService.findAllForUser(user);
+    console.log('projects.controller: @Get(/projects) started');
+    const projects = await this.projectsService.findAllForUser(jwtBody.userId);
     return { projects };
   }
 

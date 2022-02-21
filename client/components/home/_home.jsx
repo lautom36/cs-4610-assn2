@@ -23,6 +23,7 @@ export const Home = () => {
   }, []);
 
   useEffect(async () => {
+    console.log('here');
     const { projects } = await api.get('/projects');
     setProjects(projects);
   }, []);

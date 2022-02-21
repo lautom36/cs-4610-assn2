@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { forEach } from 'lodash';
 import { Projects } from 'server/entities/projects.entity';
 import { User } from 'server/entities/user.entity';
-import { Repository } from 'typeorm';
+import { UserProjects } from 'server/entities/user_projects.entity';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectsService {
@@ -13,11 +15,25 @@ export class ProjectsService {
     private userRepository: Repository<User>,
   ) {}
 
-  findAllForUser(user: User): Promise<Projects[]> {
-    return this.projectRepository.find({
-      relations: ['user'],
-      where: { id: user.id },
+  async findAllForUser(id: number) {
+    console.log('projects.service: findAllForUser started');
+    const user = await this.userRepository.findOne(id, {
+      relations: ['userProjects'],
     });
+    const userProjects = user.userProjects;
+    let keys: number[];
+    for (let i = 0; i < userProjects.length; i++) {
+      keys.concat(userProjects[i].projectId);
+    }
+    let projects: Projects[];
+    if (keys !== undefined) {
+      for (let i = 0; i < keys.length; i++) {
+        const j = await this.projectRepository.find({ where: { id: keys[i] } });
+        projects.concat(j);
+      }
+    }
+
+    return projects;
   }
 
   findProjectById(id: number): Promise<Projects> {

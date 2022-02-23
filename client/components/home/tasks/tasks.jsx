@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Button } from '../common/button';
+import { Button } from '../../common/button';
 
-export const Task = ({ task, completeTask }) => {
+export const Tasks = ({ task, completeTask }) => {
   return (
     <div className="border-2 rounded p-4">
       {task.title}

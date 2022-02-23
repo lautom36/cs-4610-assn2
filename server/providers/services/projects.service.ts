@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { forEach } from 'lodash';
 import { Projects } from 'server/entities/projects.entity';
 import { User } from 'server/entities/user.entity';
-import { UserProjects } from 'server/entities/user_projects.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectsService {
@@ -40,8 +38,10 @@ export class ProjectsService {
     return this.projectRepository.findOne(id);
   }
 
-  createProject(project: Projects): Promise<Projects> {
-    return this.projectRepository.save(project);
+  createProject(project: Projects) {
+    console.log('projects.service: createProject started');
+    this.projectRepository.save(project);
+    return project;
   }
 
   addUser(project: Projects): Promise<Projects> {

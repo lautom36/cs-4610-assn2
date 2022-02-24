@@ -13,7 +13,7 @@ export class ProjectsService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findAllForUser(id: number) {
+  async findAllForUser(id: number): Promise<Projects[]> {
     console.log('projects.service: findAllForUser started');
     const user = await this.userRepository.findOne(id, {
       relations: ['userProjects'],
@@ -23,25 +23,24 @@ export class ProjectsService {
     for (let i = 0; i < userProjects.length; i++) {
       keys.concat(userProjects[i].projectId);
     }
-    let projects: Projects[];
+    let project: Projects[];
     if (keys !== undefined) {
       for (let i = 0; i < keys.length; i++) {
         const j = await this.projectRepository.find({ where: { id: keys[i] } });
-        projects.concat(j);
+        project.concat(j);
       }
     }
 
-    return projects;
+    return project;
   }
 
   findProjectById(id: number): Promise<Projects> {
     return this.projectRepository.findOne(id);
   }
 
-  createProject(project: Projects) {
+  createProject(project: Projects): Promise<Projects> {
     console.log('projects.service: createProject started');
-    this.projectRepository.save(project);
-    return project;
+    return this.projectRepository.save(project);
   }
 
   addUser(project: Projects): Promise<Projects> {

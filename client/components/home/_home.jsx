@@ -12,11 +12,10 @@ export const Home = () => {
   const api = useContext(ApiContext);
   const roles = useContext(RolesContext);
   const navigate = useNavigate();
-
   const [projects, setProjects] = useState([]); // mine
-  const [projectTitle, setProjectTitle] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
-
+  const [projectTitle, setProjectTitle] = useState(''); //mine
+  const [projectDescription, setProjectDescription] = useState(''); // mine
+  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   useEffect(async () => {
@@ -26,26 +25,46 @@ export const Home = () => {
   }, []);
 
   // mine
-  useEffect(async () => {
-    // console.log('getting projects');
-    const { projectsRes } = await api.get('/projects');
-    setProjects([...projects, projectsRes]);
-    // console.log('got projects');
-  }, []);
-  console.log('projects:', projects);
+  // get projects
+  // useEffect(async () => {
+  //   const { project } = await api.get('/projects');
+  //   setProjects([...projects, project]);
+  // }, []);
+  // console.log(projects);
 
+  // save a new project
   const saveProject = async () => {
-    console.log('title: ', projectTitle);
-    console.log('description: ', projectDescription);
-    const projectBody = {
-      title: projectTitle,
-      description: projectDescription,
-    };
-    const project = await api.post('/projects', projectBody);
-    console.log('project: ', project);
-    setProjects([...projects, project]);
-    //setProjectContents(projectBody);
+    setErrorMessage('');
+    if (projectTitle === '') {
+      setErrorMessage("Project Descripition can't be empty");
+      return;
+    } else if (projectDescription === '') {
+      setErrorMessage("Project Description can't be empty");
+      return;
+    }
+
+    const projectBody = { title: projectTitle, description: projectDescription };
+    const { newProject } = await api.post('/projects', projectBody); // to get this to return i have to have this not in {} and the service cant return a promise
+    setProjects([...projects, newProject]);
+    //console.log('project: ', newProject);
   };
+  // console.log('projects after post:', projects);
+
+  // delete a Project
+  const deleteProject = async (project) => {
+    const { success } = await api.del(`/projects/${project.id}`);
+    if (success) {
+      setProjects(projects.filter((p) => p !== project));
+    }
+  };
+
+  // create dummy project for testing
+  useEffect(async () => {
+    const pro1 = await api.get(`/projects/${3}`);
+    const pro2 = await api.get(`/projects/${4}`);
+    setProjects([pro1.project, pro2.project]);
+  }, []);
+  console.log(projects);
   // end mine
 
   const logout = async () => {
@@ -60,21 +79,24 @@ export const Home = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-400">
       <h1>Welcom {user.firstName}</h1>
-      <div>
+      <Button type="button" onClick={logout}>
+        Logout
+      </Button>
+      <div className="p-4">
         <h1>Project Title</h1>
         <Input value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
         <h1>Project Description</h1>
         <Input value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
+        <div className="text-red-600">{errorMessage}</div>
         <Button onClick={saveProject}>Create Project</Button>
       </div>
       {/* <NewProject projects={projects} setProjects={setProjects} /> -----------------------want to find out why this dosent work*/}
-      <div>{/* <Projects projects={projects} /> */}</div>
+      <div>
+        <Projects projects={projects} deleteProject={deleteProject} />
+      </div>
 
-      <Button type="button" onClick={logout}>
-        Logout
-      </Button>
       {roles.includes('admin') && (
         <Button type="button" onClick={() => navigate('/admin')}>
           Admin

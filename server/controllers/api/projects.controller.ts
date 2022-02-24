@@ -22,8 +22,8 @@ export class ProjectsController {
   @Get('/projects')
   public async index(@JwtBody() jwtBody: JwtBodyDto) {
     console.log('projects.controller: @Get(/projects) started');
-    const project = await this.projectsService.findAllForUser(jwtBody.userId);
-    return { project };
+    const projects = await this.projectsService.findAllForUser(jwtBody.userId);
+    return { projects };
   }
 
   @Get('/projects/:id')
@@ -41,8 +41,11 @@ export class ProjectsController {
     newProject.description = body.description;
     newProject.title = body.title;
     newProject.tasks = [];
-    newProject.userProjects = [];
     newProject = await this.projectsService.createProject(newProject);
+    const userProject = new UserProjects();
+    userProject.userId = jwtBody.userId;
+    userProject.projectId = newProject.id;
+    await this.projectsService.saveUserProject(userProject);
     return { newProject };
   }
 

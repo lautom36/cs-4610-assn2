@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Projects } from 'server/entities/projects.entity';
 import { User } from 'server/entities/user.entity';
+import { UserProjects } from 'server/entities/user_projects.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -11,27 +12,19 @@ export class ProjectsService {
     private projectRepository: Repository<Projects>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(UserProjects)
+    private userProjectsRepository: Repository<UserProjects>,
   ) {}
 
   async findAllForUser(id: number): Promise<Projects[]> {
     console.log('projects.service: findAllForUser started');
     const user = await this.userRepository.findOne(id, {
-      relations: ['userProjects'],
+      relations: ['userProjects', 'userProjects.project'],
     });
-    const userProjects = user.userProjects;
-    let keys: number[];
-    for (let i = 0; i < userProjects.length; i++) {
-      keys.concat(userProjects[i].projectId);
-    }
-    let project: Projects[];
-    if (keys !== undefined) {
-      for (let i = 0; i < keys.length; i++) {
-        const j = await this.projectRepository.find({ where: { id: keys[i] } });
-        project.concat(j);
-      }
-    }
 
-    return project;
+    return user.userProjects.map((userProject) => {
+      return userProject.project;
+    });
   }
 
   findProjectById(id: number): Promise<Projects> {
@@ -41,6 +34,10 @@ export class ProjectsService {
   createProject(project: Projects): Promise<Projects> {
     console.log('projects.service: createProject started');
     return this.projectRepository.save(project);
+  }
+
+  saveUserProject(userProject: UserProjects) {
+    return this.userProjectsRepository.save(userProject);
   }
 
   addUser(project: Projects): Promise<Projects> {

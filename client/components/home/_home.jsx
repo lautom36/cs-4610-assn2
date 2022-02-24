@@ -5,6 +5,7 @@ import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from '../common/button';
 import { Input } from '../common/input';
+import { NewProject } from './projects/newProject';
 import { Projects } from './projects/projects';
 
 export const Home = () => {
@@ -24,13 +25,18 @@ export const Home = () => {
     setLoading(false);
   }, []);
 
+  // TODO: clean up ui
+  // TODO: make projects clickable and switch pages
+  // TODO: check the other api calls
+
   // mine
+
   // get projects
-  // useEffect(async () => {
-  //   const { project } = await api.get('/projects');
-  //   setProjects([...projects, project]);
-  // }, []);
-  // console.log(projects);
+  useEffect(async () => {
+    const { projects } = await api.get('/projects');
+    setProjects(projects);
+  }, []);
+  console.log(projects);
 
   // save a new project
   const saveProject = async () => {
@@ -57,13 +63,6 @@ export const Home = () => {
       setProjects(projects.filter((p) => p !== project));
     }
   };
-
-  // create dummy project for testing
-  useEffect(async () => {
-    const pro1 = await api.get(`/projects/${3}`);
-    const pro2 = await api.get(`/projects/${4}`);
-    setProjects([pro1.project, pro2.project]);
-  }, []);
   console.log(projects);
   // end mine
 
@@ -92,7 +91,7 @@ export const Home = () => {
         <div className="text-red-600">{errorMessage}</div>
         <Button onClick={saveProject}>Create Project</Button>
       </div>
-      {/* <NewProject projects={projects} setProjects={setProjects} /> -----------------------want to find out why this dosent work*/}
+      <NewProject projects={projects} setProjects={setProjects} />
       <div>
         <Projects projects={projects} deleteProject={deleteProject} />
       </div>

@@ -28,8 +28,9 @@ export const Home = () => {
   }, []);
 
   // TODO: clean up ui
-  // TODO: make projects clickable and switch pages
-  // TODO: check the other api calls
+  // TODO: need to fix patch on tasks
+  // TODO: need to fix patch to add people to project
+  // TODO: need to fix find by email
 
   // mine---------------------------
 
@@ -38,7 +39,7 @@ export const Home = () => {
     const { projects } = await api.get('/projects');
     setProjects(projects);
   }, []);
-  console.log(projects);
+  //console.log(projects);
 
   // save a new project
   const saveProject = async () => {
@@ -73,7 +74,7 @@ export const Home = () => {
       setProjects(projects.filter((p) => p !== project));
     }
   };
-  console.log(projects);
+  // console.log(projects);
   // end mine ----------------------------------
 
   const logout = async () => {

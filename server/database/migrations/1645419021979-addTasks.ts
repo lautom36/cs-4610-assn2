@@ -45,7 +45,6 @@ export class addTasks1645419021979 implements MigrationInterface {
         ],
       }),
     );
-<<<<<<< HEAD:server/database/migrations/1645419021979-addTasks.ts
 
     await queryRunner.createForeignKey(
       'tasks',
@@ -66,8 +65,6 @@ export class addTasks1645419021979 implements MigrationInterface {
         onDelete: 'CASCADE',
       }),
     );
-=======
->>>>>>> 936d78fe3b2892a512b60ed5b58ed153cf9e0e32:server/database/migrations/1645322401396-AddProjects.ts
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -17,11 +17,6 @@ export class AddRefreshToken1637631042877 implements MigrationInterface {
             type: 'int',
             isNullable: false,
           },
-          {
-            name: 'adminId',
-            type: 'int',
-            isNullable: false,
-          },
         ],
       }),
     );

@@ -28,7 +28,7 @@ export class ProjectsService {
   }
 
   findProjectById(id: number): Promise<Projects> {
-    return this.projectRepository.findOne(id);
+    return this.projectRepository.findOne(id, { relations: ['tasks'] });
   }
 
   createProject(project: Projects): Promise<Projects> {

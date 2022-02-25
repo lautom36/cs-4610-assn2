@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { ApiContext } from '../../../utils/api_context';
 import { Button } from '../../common/button';
+import { Input } from '../../common/input';
 
 export const NewProject = ({ projects, setProjects }) => {
   console.log('newProject: started');
@@ -18,9 +19,9 @@ export const NewProject = ({ projects, setProjects }) => {
   return (
     <div>
       <h1>Project Title</h1>
-      <input value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
+      <Input value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
       <h1>Project Description</h1>
-      <input value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
+      <Input value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
       <Button onClick={saveProject}>Create Project</Button>
     </div>
   );

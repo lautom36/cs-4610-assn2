@@ -5,7 +5,7 @@ import { AuthContext } from '../../utils/auth_context';
 import { RolesContext } from '../../utils/roles_context';
 import { Button } from '../common/button';
 import { Input } from '../common/input';
-import { NewProject } from './projects/newProject';
+import { Project } from './projects/project';
 import { Projects } from './projects/projects';
 
 export const Home = () => {
@@ -19,6 +19,8 @@ export const Home = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [projectSelected, setProjectSelected] = useState(null);
+
   useEffect(async () => {
     const res = await api.get('/users/me');
     setUser(res.user);
@@ -29,7 +31,7 @@ export const Home = () => {
   // TODO: make projects clickable and switch pages
   // TODO: check the other api calls
 
-  // mine
+  // mine---------------------------
 
   // get projects
   useEffect(async () => {
@@ -56,15 +58,23 @@ export const Home = () => {
   };
   // console.log('projects after post:', projects);
 
+  // navigage to project after clicking div
+  const goToProject = async (project) => {
+    console.log('project: ', project);
+    console.log('projectid: ', project.id);
+    navigate(`/project/${project.id}`);
+  };
+
   // delete a Project
   const deleteProject = async (project) => {
+    console.log('deleteProject started');
     const { success } = await api.del(`/projects/${project.id}`);
     if (success) {
       setProjects(projects.filter((p) => p !== project));
     }
   };
   console.log(projects);
-  // end mine
+  // end mine ----------------------------------
 
   const logout = async () => {
     const res = await api.del('/sessions');
@@ -78,29 +88,30 @@ export const Home = () => {
   }
 
   return (
-    <div className="p-4 bg-gray-400">
-      <h1>Welcom {user.firstName}</h1>
-      <Button type="button" onClick={logout}>
-        Logout
-      </Button>
-      <div className="p-4">
-        <h1>Project Title</h1>
-        <Input value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
-        <h1>Project Description</h1>
-        <Input value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
-        <div className="text-red-600">{errorMessage}</div>
-        <Button onClick={saveProject}>Create Project</Button>
-      </div>
-      <NewProject projects={projects} setProjects={setProjects} />
+    <div className="p-4 bg-gray-400 flex-row">
       <div>
-        <Projects projects={projects} deleteProject={deleteProject} />
-      </div>
-
-      {roles.includes('admin') && (
-        <Button type="button" onClick={() => navigate('/admin')}>
-          Admin
+        <h1>Welcom {user.firstName}</h1>
+        <Button type="button" onClick={logout}>
+          Logout
         </Button>
-      )}
+        <div>
+          <h1>Project Title</h1>
+          <Input value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
+          <h1>Project Description</h1>
+          <Input value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} />
+          <div className="text-red-600">{errorMessage}</div>
+          <Button onClick={saveProject}>Create Project</Button>
+        </div>
+        <div>
+          <Projects projects={projects} deleteProject={deleteProject} goToProject={goToProject} />
+        </div>
+        {roles.includes('admin') && (
+          <Button type="button" onClick={() => navigate('/admin')}>
+            Admin
+          </Button>
+        )}
+      </div>
+      <div className="bg-red-700 p-4">{projectSelected !== null && <Project project={projectSelected} />}</div>
     </div>
   );
 };

@@ -55,6 +55,8 @@ export class TasksController {
     task.status = false;
     task.title = body.title;
     task.timeEstimation = body.timeEstimation;
+    task.user = null;
+    task.userId = null;
     task = await this.taskService.createTask(task);
     return { task };
   }

@@ -15,7 +15,7 @@ export class TasksService {
 
   async findAllforProject(projectId: number) {
     console.log('tasks.service: findAllForProject started');
-    const tasks = await this.taskRepository.find({ where: { projectId: projectId } });
+    const tasks = await this.taskRepository.find({ where: { projectId: projectId }, relations: ['user'] });
     return tasks;
   }
 

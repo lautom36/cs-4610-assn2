@@ -1,9 +1,21 @@
 /* eslint-disable prettier/prettier */
+import { useContext } from 'react';
+import { ApiContext } from '../../../utils/api_context';
 import { Button } from '../../common/button';
 
-export const Tasks = ({ tasks, deleteTask }) => {
+export const Tasks = ({ tasks, deleteTask , setTasks}) => {
+  const api = useContext(ApiContext);
+  // console.log('tasks: ', tasks);
+
   // need to add a way to complete tasks
-  console.log('tasks: ', tasks);
+  const updateTaskStatus = async (oldTask) => {
+    const { task } = await api.patch(`/tasks/${oldTask.id}`);
+    let updateTasks = tasks;
+    let i = updateTasks.indexOf(oldTask);
+    updateTasks[i] = task;
+    setTasks(updateTasks);
+  };
+
   return (
     <div className="flex-1">
       {tasks.map((task) => {
@@ -11,15 +23,15 @@ export const Tasks = ({ tasks, deleteTask }) => {
           <div
             key={`task_${task.id}`}
             className="border-2 rounded bg-gray-500 text-white"
-            onClick={() => completeTask(task.id)}
             >
-              <h1>{task.title}</h1>
-              <h4>{task.timeEstimation}</h4>
-              
+              <h1>{task.title} - {task.user.firstName}</h1>
+              <h4>Time estimation: {task.timeEstimation}</h4>
               <h4>{task.description}</h4>
-              {task.status}
             <div>
               <Button onClick={() => deleteTask(task)}>Delete</Button>
+            </div>
+            <div>
+              <Button onClick={() => updateTaskStatus(task.id)}>Complete Task</Button>
             </div>
           </div>
         );

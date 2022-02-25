@@ -26,7 +26,7 @@ export class UsersController {
   ) {}
 
   @Get('/users')
-  @Roles(RoleKey.ADMIN)
+  // @Roles(RoleKey.ADMIN)
   async index() {
     console.log('tasks.service: @Get(/users) started');
     const users = await this.usersService.findAll();
@@ -36,6 +36,12 @@ export class UsersController {
   @Get('/users/me')
   async getCurrentUser(@JwtBody() jwtBody: JwtBodyDto) {
     const user = await this.usersService.find(jwtBody.userId);
+    return { user };
+  }
+
+  @Get('/users/:email')
+  async getUserByEmail(@Param('email') email: string) {
+    const user = await this.usersService.findByEmail(email);
     return { user };
   }
 

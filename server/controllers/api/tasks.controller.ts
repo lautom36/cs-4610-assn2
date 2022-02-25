@@ -3,6 +3,7 @@ import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Projects } from 'server/entities/projects.entity';
 import { Tasks } from 'server/entities/tasks.entity';
+import { User } from 'server/entities/user.entity';
 import { ProjectsService } from 'server/providers/services/projects.service';
 import { TasksService } from 'server/providers/services/tasks.service';
 import { UsersService } from 'server/providers/services/users.service';
@@ -19,6 +20,8 @@ class TaskPostBody {
   description: string;
 
   timeEstimation: string;
+
+  user: User;
 }
 
 class TaskAddUserBody {
@@ -33,6 +36,7 @@ export class TasksController {
     private taskService: TasksService,
   ) {}
 
+  // works
   @Get('/tasks')
   public async index(@Body() body: TaskByProjectBody) {
     const tasks = await this.taskService.findAllforProject(body.project.id);
@@ -45,6 +49,7 @@ export class TasksController {
     return task;
   }
 
+  // working
   @Post('/tasks')
   public async create(@Body() body: TaskPostBody) {
     const project = await this.projectsService.findProjectById(body.projectId);
@@ -55,8 +60,8 @@ export class TasksController {
     task.status = false;
     task.title = body.title;
     task.timeEstimation = body.timeEstimation;
-    task.user = null;
-    task.userId = null;
+    task.user = body.user;
+    task.userId = body.user.id;
     task = await this.taskService.createTask(task);
     return { task };
   }
@@ -69,14 +74,14 @@ export class TasksController {
     return { task };
   }
 
-  @Patch('/tasks/:id/userId')
-  public async addUser(@Param('id') id: string, @Body() body: TaskAddUserBody) {
-    let task = await this.taskService.findTaskById(parseInt(id, 10));
-    const user = await this.usersService.findByEmail(body.email);
-    task.user = user;
-    task = await this.taskService.addUser(task);
-    return { task };
-  }
+  // @Patch('/tasks/:id/userId')
+  // public async addUser(@Param('id') id: string, @Body() body: TaskAddUserBody) {
+  //   let task = await this.taskService.findTaskById(parseInt(id, 10));
+  //   const user = await this.usersService.findByEmail(body.email);
+  //   task.user = user;
+  //   task = await this.taskService.addUser(task);
+  //   return { task };
+  // }
 
   @Delete('/tasks:id')
   public async destroy(@Param('id') id: string, @JwtBody() jwtBody: JwtBodyDto) {

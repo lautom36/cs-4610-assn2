@@ -6,6 +6,7 @@ import { Tasks } from '../tasks/tasks';
 import { Button } from '../../common/button';
 import { UsersList } from './usersList';
 import { forEach } from 'lodash';
+import 'App.css';
 
 export const Project = () => {
   const { id } = useParams();
@@ -116,13 +117,13 @@ export const Project = () => {
   return (
     <div className="p-4 bg-gray-400 flex-row">
       <div className="pb-1">
-        <h1>Task Title</h1>
+        <h1 className={styles.taskTitle}> Task Title</h1>
         <Input value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} />
-        <h1>Task Description</h1>
+        <h1 className={styles.taskDescription}>Task Description</h1>
         <Input value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} />
-        <h1>Task Time Estimation</h1>
+        <h1 className={styles.time}>Task Time Estimation</h1>
         <Input value={taskTimeEstimation} onChange={(e) => setTaskTimeEstimation(e.target.value)} />
-        <h1>Assign a person to a task</h1>
+        <h1 className={styles.assign}>Assign a person to a task</h1>
         <Input type="email" value={taskUserEmail} onChange={(e) => setTaskUserEmail(e.target.value)} />
         <div className="text-red-600 pt-1">{errorMessage}</div>
         <Button onClick={saveTask}>Create Task</Button>
@@ -132,13 +133,14 @@ export const Project = () => {
       </div>
       <div>
         <div>
-          <h1>Add user to project</h1>
+          <h1 className={styles.AddUser}>Add user to project</h1>
           <Input value={addNewUser} onChange={(e) => setAddNewUser(e.target.value)} />
           <Button onClick={addUserToProject}>Add</Button>
         </div>
-        <h2>Project Members</h2>
+        <h2 className={styles.Members}>Project Members</h2>
         <UsersList users={projectsUsers} />
       </div>
     </div>
   );
 };
+

@@ -1,0 +1,36 @@
+.taskTitle {
+  color: white;
+  padding: 60px;
+  font-family: Arial;
+  text-align: center;
+}
+.taskDescription{color: black;
+  padding: 40px;
+  font-family: Arial;
+  text-align: left;
+}
+.timeassign{
+  color: royalblue;
+  padding: 40px;
+  font-family: Arial;
+  text-align: right;
+}
+
+.AddUser{
+  color: royalblue;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
+}        
+.Members{
+  color: royalblue;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+.projectsUsers{
+  color: royalblue;
+  padding: 40px;
+  font-family: Arial;
+  text-align: center;
+}

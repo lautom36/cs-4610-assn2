@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post, Put } from '@nestjs/common';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Projects } from 'server/entities/projects.entity';
@@ -66,7 +66,7 @@ export class TasksController {
     return { task };
   }
 
-  @Patch('/tasks/:id')
+  @Put('/tasks/:id')
   public async updateStatus(@Param('id') id: string) {
     let task = await this.taskService.findTaskById(parseInt(id, 10));
     task.status = !task.status;
@@ -82,15 +82,4 @@ export class TasksController {
   //   task = await this.taskService.addUser(task);
   //   return { task };
   // }
-
-  @Delete('/tasks:id')
-  public async destroy(@Param('id') id: string, @JwtBody() jwtBody: JwtBodyDto) {
-    const task = await this.taskService.findTaskById(parseInt(id, 10));
-    const project = await this.projectsService.findProjectById(task.projectId);
-    if (project.adminId !== jwtBody.userId) {
-      throw new HttpException('Unauthorized', 401);
-    }
-    this.taskService.removeTask(task);
-    return { success: true };
-  }
 }

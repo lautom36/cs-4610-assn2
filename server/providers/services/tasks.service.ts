@@ -27,15 +27,11 @@ export class TasksService {
     return this.taskRepository.save(task);
   }
 
-  updateStatus(task: Tasks): Promise<Tasks> {
+  updateStatus(task: Tasks) {
     return this.taskRepository.save(task);
   }
 
   addUser(task: Tasks): Promise<Tasks> {
     return this.taskRepository.save(task);
-  }
-
-  removeTask(task: Tasks) {
-    this.projectRepository.delete(task.id);
   }
 }

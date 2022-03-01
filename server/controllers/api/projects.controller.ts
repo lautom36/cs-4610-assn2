@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post } from
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { Projects } from 'server/entities/projects.entity';
+import { User } from 'server/entities/user.entity';
 import { UserProjects } from 'server/entities/user_projects.entity';
 import { ProjectsService } from 'server/providers/services/projects.service';
 import { UsersService } from 'server/providers/services/users.service';
@@ -12,7 +13,7 @@ class ProjectPostBody {
 }
 
 class ProjectPatchBody {
-  email: string;
+  userId: number;
 }
 
 @Controller()
@@ -49,15 +50,14 @@ export class ProjectsController {
     return { newProject };
   }
 
-  @Patch('/projects/:id')
+  @Post('/projects/:id')
   public async update(@Param('id') id: string, @Body() body: ProjectPatchBody) {
-    let project = await this.projectsService.findProjectById(parseInt(id, 10));
-    const user = await this.userService.findByEmail(body.email);
-    const userProject = new UserProjects();
-    userProject.user = user;
-    project.userProjects = [userProject];
-    project = await this.projectsService.addUser(project);
-    return { project };
+    const project = await this.projectsService.findProjectById(parseInt(id, 10));
+    let userProject = new UserProjects();
+    userProject.userId = body.userId;
+    userProject.projectId = parseInt(id, 10);
+    userProject = await this.projectsService.saveUserProject(userProject);
+    return { userProject };
   }
 
   @Delete('/projects/:id')

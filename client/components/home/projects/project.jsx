@@ -14,7 +14,6 @@ export const Project = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskTimeEstimation, setTaskTimeEstimation] = useState('');
-  const [taskUserEmail, setTaskUserEmail] = useState('');
   const [tasks, setTasks] = useState([]);
   const [userProjects, setUserProjects] = useState([]);
   const [projectsUsers, setProjectsUsers] = useState([]);
@@ -54,32 +53,11 @@ export const Project = () => {
       return;
     }
 
-    // find if given email is valid
-    const { user } = await api.get(`/users/${taskUserEmail}`);
-    if (user === undefined) {
-      setErrorMessage('Not a valid Email');
-      return;
-    }
-
-    // check if user is in the project
-    let userInProject = false;
-    userProjects.forEach((userProject) => {
-      if (userProject.userId === user.id) {
-        userInProject = true;
-      }
-    });
-
-    if (!userInProject) {
-      setErrorMessage('User you are trying to add to task is not in project. Try adding them to the project first');
-      return;
-    }
-
     const taskBody = {
       projectId: currProject.id,
       title: taskTitle,
       description: taskDescription,
       timeEstimation: taskTimeEstimation,
-      user: user,
     };
     const { task } = await api.post('/tasks', taskBody);
     setTasks([...tasks, task]);
@@ -130,14 +108,12 @@ export const Project = () => {
         <Input value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} />
         <h1>Task Time Estimation</h1>
         <Input value={taskTimeEstimation} onChange={(e) => setTaskTimeEstimation(e.target.value)} />
-        <h1>Assign a person to a task</h1>
-        <Input type="email" value={taskUserEmail} onChange={(e) => setTaskUserEmail(e.target.value)} />
         <div className="text-red-600 pt-1">{errorMessage}</div>
         <Button onClick={saveTask}>Create Task</Button>
       </div>
 
       <div className="p-4 bg-gray-400 flex-row mb-1">
-        <Tasks tasks={tasks} setTasks={setTasks} />
+        <Tasks tasks={tasks} setTasks={setTasks} projectsUsers={projectsUsers} />
       </div>
     </div>
   );

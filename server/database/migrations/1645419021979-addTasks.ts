@@ -20,7 +20,7 @@ export class addTasks1645419021979 implements MigrationInterface {
           {
             name: 'userId',
             type: 'int',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'title',

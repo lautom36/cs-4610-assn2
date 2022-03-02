@@ -1,21 +1,57 @@
 /* eslint-disable prettier/prettier */
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ApiContext } from '../../../utils/api_context';
 import { Button } from '../../common/button';
+import { Input } from '../../common/input';
+import { Task } from './task';
 
-export const Tasks = ({ tasks, setTasks}) => {
+export const Tasks = ({ tasks, setTasks, projectsUsers}) => {
   const api = useContext(ApiContext);
-  // console.log('tasks: ', tasks);
+  const [taskUserEmail, setTaskUserEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  //TODO: tasks get completed, but the screen does not update
+  // update the task
   const updateTaskStatus = async (oldTask) => {
-    console.log('oldTask: ', oldTask);
     const { task } = await api.put(`/tasks/${oldTask.id}`);
     let updateTasks = [...tasks];
     let i = updateTasks.indexOf(oldTask);
     updateTasks[i] = {...oldTask, ...task};
     setTasks(updateTasks);
+  };
 
+  const addUserToTask = async ( oldTask, email) => {
+    setErrorMessage('')
+    // find if given email is valid
+    const { user } = await api.get(`/users/${email}`);
+    if (user === undefined) {
+      setErrorMessage('Not a valid Email');
+      return;
+    }
+
+    // check if user is in the project
+    let userInProject = false;
+    projectsUsers.forEach((userProject) => {
+      const userProjectId = parseInt(userProject.id, 10);
+      const userId = parseInt(user.id, 10);
+      if (userProjectId === userId) {
+        userInProject = true;
+      }
+    });
+
+    if (!userInProject) {
+      setErrorMessage('User you are trying to add to task is not in project. Try adding them to the project first');
+      return;
+    }
+    taskBody = {
+      user: user
+    }
+
+    // add user to task
+    const { task } = await api.put(`/tasks/user/${oldTask.id}`, taskBody);
+    let updateTasks = [...tasks];
+    let i = updateTasks.indexOf(oldTask);
+    updateTasks[i] = {...oldTask, ...task};
+    setTasks(updateTasks);
   };
 
   return (
@@ -25,18 +61,20 @@ export const Tasks = ({ tasks, setTasks}) => {
           <div
             key={`task_${task.id}`}
             className="border-2 rounded bg-gray-500 text-white mb-1"
-            >
-              <h1>{task.title} - {task.user.firstName}</h1>
-              <h4>Time estimation: {task.timeEstimation}</h4>
-              <h4>{task.description}</h4>
-              <h4>Status: {task.status ? 'done': 'not finished'}</h4>
-            <div>
-              <Button onClick={() => updateTaskStatus(task)}>Complete Task</Button>
-            </div>
+          >
+            <Task task={task} errorMessage={errorMessage} addUserToTask={addUserToTask} />
           </div>
         );
       })}
     </div>
   );
 };
+
+
+
+
+
+
+
+
 

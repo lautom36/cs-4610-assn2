@@ -1,7 +1,6 @@
 import { Button } from '../../common/button';
 
 export const Projects = ({ projects, deleteProject, goToProject }) => {
-  console.log(projects);
   return (
     <div className="flex-1">
       {projects.map((project) => {
@@ -12,9 +11,9 @@ export const Projects = ({ projects, deleteProject, goToProject }) => {
             onClick={() => goToProject(project)}
           >
             {project.title}
-            <div>
+            {/* <div>
               <Button onClick={() => deleteProject(project)}>Delete</Button>
-            </div>
+            </div> */}
           </div>
         );
       })}

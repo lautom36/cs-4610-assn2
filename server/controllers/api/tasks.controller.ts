@@ -25,7 +25,7 @@ class TaskPostBody {
 }
 
 class TaskAddUserBody {
-  email: string;
+  user: User;
 }
 
 @Controller()
@@ -60,9 +60,18 @@ export class TasksController {
     task.status = false;
     task.title = body.title;
     task.timeEstimation = body.timeEstimation;
-    task.user = body.user;
-    task.userId = body.user.id;
+    task.user = null;
+    task.userId = null;
     task = await this.taskService.createTask(task);
+    return { task };
+  }
+
+  @Put('/tasks/user/:id')
+  public async updateTaskUser(@Param('id') id: string, @Body() body: TaskAddUserBody) {
+    let task = await this.taskService.findTaskById(parseInt(id, 10));
+    task.userId = body.user.id;
+    task.user = body.user;
+    task = await this.taskService.updateStatus(task);
     return { task };
   }
 
@@ -73,13 +82,4 @@ export class TasksController {
     task = await this.taskService.updateStatus(task);
     return { task };
   }
-
-  // @Patch('/tasks/:id/userId')
-  // public async addUser(@Param('id') id: string, @Body() body: TaskAddUserBody) {
-  //   let task = await this.taskService.findTaskById(parseInt(id, 10));
-  //   const user = await this.usersService.findByEmail(body.email);
-  //   task.user = user;
-  //   task = await this.taskService.addUser(task);
-  //   return { task };
-  // }
 }

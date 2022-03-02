@@ -39,7 +39,6 @@ export const Home = () => {
     const { projects } = await api.get('/projects');
     setProjects(projects);
   }, []);
-  //console.log(projects);
 
   // save a new project
   const saveProject = async () => {
@@ -55,9 +54,7 @@ export const Home = () => {
     const projectBody = { title: projectTitle, description: projectDescription };
     const { newProject } = await api.post('/projects', projectBody); // to get this to return i have to have this not in {} and the service cant return a promise
     setProjects([...projects, newProject]);
-    //console.log('project: ', newProject);
   };
-  // console.log('projects after post:', projects);
 
   // navigage to project after clicking div
   const goToProject = async (project) => {
@@ -74,7 +71,6 @@ export const Home = () => {
       setProjects(projects.filter((p) => p !== project));
     }
   };
-  // console.log(projects);
   // end mine ----------------------------------
 
   const logout = async () => {
@@ -112,7 +108,6 @@ export const Home = () => {
           </Button>
         )}
       </div>
-      <div className="bg-red-700 p-4">{projectSelected !== null && <Project project={projectSelected} />}</div>
     </div>
   );
 };
